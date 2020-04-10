@@ -14,22 +14,25 @@ public class StudentService {
 	    private StudentRepository studentRepository;
 	   
 	public student create(String firstName,String lastName, int age ,int sem, String sec,String usn) {
-        return studentRepository.save(new student(firstName, lastName, age,sem,sec,usn));
-    }
+       
+		return studentRepository.save(new student(firstName, lastName, age,sem,sec,usn));
+	}
+            
+	
     //Retrieve operation
     public List<student> getAll(){
         return studentRepository.findAll();
     }
     public student getByFirstName(String firstName) {
-        return studentRepository.findByFirstName(firstName);
+        return StudentRepository.findByFirstName(firstName);
     }
 
     public student getByUsn(String usn) {
-        return studentRepository.findByUsn(usn);
+        return StudentRepository.findByUsn(usn);
     }
     //Update operation
     public student update(String firstName, String lastName, int age,int sem, String sec, String usn) {
-        student p = studentRepository.findByFirstName(firstName);
+        student p = StudentRepository.findByFirstName(firstName);
         p.setLastName(lastName);
         p.setAge(age);
         p.setUsn(usn);
@@ -38,7 +41,7 @@ public class StudentService {
         return studentRepository.save(p);
     }
     public student updaterecord(student s, String usn) {
-        student p = studentRepository.findByUsn(usn);
+        student p = StudentRepository.findByUsn(usn);
         p.setFirstName(s.getFirstName());
         p.setLastName(s.getLastName());
         p.setAge(s.getAge());
@@ -53,15 +56,17 @@ public class StudentService {
         studentRepository.deleteAll();
     }
     public void delete(String firstName) {
-        student p = studentRepository.findByFirstName(firstName);
+        student p = StudentRepository.findByFirstName(firstName);
         studentRepository.delete(p);
     }
     public void deletebyusn(String usn) {
-        student s =studentRepository.findByUsn(usn);
+        student s =StudentRepository.findByUsn(usn);
         studentRepository.delete(s);
+        
     }
-    public  void createrecord(student person) {
+    public  student createrecord(student person) {
         studentRepository.save(person);
+        return person;
     }
 
 }
