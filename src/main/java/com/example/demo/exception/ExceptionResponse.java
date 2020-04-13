@@ -6,10 +6,11 @@ public class ExceptionResponse {
   private String message;
   private String details;
 
-  public ExceptionResponse(Date timestamp, String message) {
+  public ExceptionResponse(Date timestamp, String message,String details) {
     super();
     this.timestamp = timestamp;
     this.message = message;
+    this.details=details;
   }
 
   public Date getTimestamp() {
@@ -20,5 +21,8 @@ public class ExceptionResponse {
     return message;
   }
 
+  public String getDetails() {
+	    return details;
+  }
 
 }

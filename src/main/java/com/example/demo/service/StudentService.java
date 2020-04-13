@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.StudentNotFoundException;
 import com.example.demo.model.student;
 import com.example.demo.repository.StudentRepository;
 
@@ -14,7 +15,6 @@ public class StudentService {
 	    private StudentRepository studentRepository;
 	   
 	public student create(String firstName,String lastName, int age ,int sem, String sec,String usn) {
-       
 		return studentRepository.save(new student(firstName, lastName, age,sem,sec,usn));
 	}
             

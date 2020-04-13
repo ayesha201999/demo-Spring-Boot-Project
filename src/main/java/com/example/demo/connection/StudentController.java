@@ -3,6 +3,7 @@ package com.example.demo.connection;
 import java.util.List;
 import java.util.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.tomcat.util.file.ConfigurationSource.Resource;
@@ -32,7 +33,7 @@ public class StudentController {
 	 @Autowired
 	 private StudentService studentService;	
 	 @RequestMapping("/create")
-	    public String create(@RequestParam String firstName, @RequestParam String lastName, @RequestParam int age,@RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
+	    public String create(@Valid @RequestParam String firstName, @RequestParam String lastName, @RequestParam int age,@RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
 		 if (firstName==null||lastName==null||((age==0)||(age<0))||sec==null||((sem==0)||(sem<0))||sec==null||usn==null)
 	        {
 			 throw new StudentNotFoundException("Incomplete information");
@@ -43,7 +44,8 @@ public class StudentController {
 	 }
 	 
 	    @PostMapping(value = "/")
-	    public ResponseEntity<?> saveOrUpdateStudent(@RequestBody student person) {
+	    @Transactional
+	    public ResponseEntity<?> saveOrUpdateStudent( @RequestBody @Valid student person) {
 	        studentService.createrecord(person);
 	        return new ResponseEntity("Student added successfully", HttpStatus.OK);
 	       /*
@@ -79,12 +81,12 @@ public class StudentController {
 	    }
 	    
 	    @RequestMapping("/update")
-	    public String update(@RequestParam String firstName, @RequestParam String lastName, @RequestParam int age, @RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
+	    public String update(@Valid @RequestParam String firstName, @RequestParam String lastName, @RequestParam int age, @RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
 	        student p = studentService.update(firstName, lastName, age,sem,sec,usn);
 	        return p.toString();
 	    }
 	    @PutMapping(value="/{usn}")
-	    public ResponseEntity<student>  updaterecord(@RequestBody student s, @PathVariable ("usn") String usn) {
+	    public ResponseEntity<student>  updaterecord(@Valid @RequestBody student s, @PathVariable ("usn") String usn) {
 	    	student studentOptional = StudentRepository.findByUsn(usn);
 	    	if (studentOptional==null)
 				return new ResponseEntity("FAILED TO UPDATE ", HttpStatus.NOT_FOUND);
