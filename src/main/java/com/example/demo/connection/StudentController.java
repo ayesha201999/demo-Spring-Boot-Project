@@ -10,6 +10,7 @@ import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,9 @@ import com.example.demo.model.student;
 import com.example.demo.model.student;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @RestController
@@ -33,7 +37,7 @@ public class StudentController {
 	 @Autowired
 	 private StudentService studentService;	
 	 @RequestMapping("/create")
-	    public String create(@Valid @RequestParam String firstName, @RequestParam String lastName, @RequestParam int age,@RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
+	    public String create(@Validated @RequestParam String firstName, @RequestParam String lastName, @RequestParam int age,@RequestParam int sem, @RequestParam String sec,@RequestParam String usn) {
 		 if (firstName==null||lastName==null||((age==0)||(age<0))||sec==null||((sem==0)||(sem<0))||sec==null||usn==null)
 	        {
 			 throw new StudentNotFoundException("Incomplete information");
@@ -128,7 +132,16 @@ public class StudentController {
 	        return "Deleted all records";
 	    }
 	 
-	 
+	    @ResponseStatus(HttpStatus.BAD_REQUEST)
+	    @ExceptionHandler(MethodArgumentNotValidException.class)
+	    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+	        Map<String, String> errors = new HashMap<>();
+	     
+	        ex.getBindingResult().getFieldErrors().forEach(error -> 
+	            errors.put(error.getField(), error.getDefaultMessage()));
+	         
+	        return errors;
+	    }
 	
 	 
 }
